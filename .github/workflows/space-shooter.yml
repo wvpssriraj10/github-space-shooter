@@ -16,10 +16,11 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      - name: Checkout branch (avoid detached HEAD)
-        run: git checkout ${{ github.ref_name }}
-      - name: Pull latest changes
-        run: git pull origin ${{ github.ref_name }} --rebase
+      - name: Sync to remote (fetch + reset so push will succeed)
+        run: |
+          git fetch origin ${{ github.ref_name }}
+          git checkout ${{ github.ref_name }}
+          git reset --hard origin/${{ github.ref_name }}
       - name: Create assets directory
         run: mkdir -p assets
       - uses: czl9707/gh-space-shooter@v1
